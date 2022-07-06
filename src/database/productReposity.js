@@ -1,5 +1,5 @@
-const { data: products } = require('./products');
-import { writeFileSync } from 'fs'
+const { data: products } = require("./products");
+import { writeFileSync } from "fs";
 const _ = require("lodash");
 
 export function getAll() {
@@ -11,9 +11,10 @@ export function getOne(id) {
 }
 
 export function add(data) {
+  data.createdAt = Date.now();
   const updateProducts = [data, ...products];
   return writeFileSync(
-    './src/database/products.json',
+    "./src/database/products.json",
     JSON.stringify({
       data: updateProducts,
     })
@@ -21,15 +22,15 @@ export function add(data) {
 }
 
 export function update(data, id) {
-  const updateProducts = products.map(product => {
-    if(product.id === parseInt(id)) {
-      return {...product, ...data}
+  const updateProducts = products.map((product) => {
+    if (product.id === parseInt(id)) {
+      return { ...product, ...data };
     }
     return product;
   });
 
   return writeFileSync(
-    './src/database/products.json',
+    "./src/database/products.json",
     JSON.stringify({
       data: updateProducts,
     })
@@ -37,9 +38,11 @@ export function update(data, id) {
 }
 
 export function remove(id) {
-  const updateProducts = products.filter((product) => product.id !== parseInt(id));
+  const updateProducts = products.filter(
+    (product) => product.id !== parseInt(id)
+  );
   return writeFileSync(
-    './src/database/products.json',
+    "./src/database/products.json",
     JSON.stringify({
       data: updateProducts,
     })
@@ -47,12 +50,12 @@ export function remove(id) {
 }
 
 export function getSome(products, limit) {
-  return products.slice(0, limit)
+  return products.slice(0, limit);
 }
 
 export function sort(sortBy) {
   return products.sort((a, b) => {
-    if (sortBy === 'asc') {
+    if (sortBy === "asc") {
       return a.createdAt - b.createdAt;
     }
     return b.createdAt - a.createdAt;

@@ -16,7 +16,7 @@ export async function getProducts(ctx) {
     const { limit, sortBy } = ctx.request.query;
     let products = [];
 
-    if (sort) {
+    if (sortBy) {
       products = sortProducts(sortBy);
     } else {
       products = getAllProducts();
