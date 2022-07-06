@@ -11,6 +11,22 @@ import {
   getFields as getProductFields,
 } from "../../database/productReposity";
 
+export async function save(ctx) {
+  try {
+    const newProduct = ctx.request.body;
+    addProduct(newProduct);
+    ctx.status = 201;
+    return (ctx.body = {
+      success: true,
+    });
+  } catch (e) {
+    return (ctx.body = {
+      success: false,
+      message: e.message,
+    });
+  }
+}
+
 export async function getProducts(ctx) {
   try {
     const { limit, sortBy } = ctx.request.query;
@@ -66,22 +82,6 @@ export async function getProduct(ctx) {
       success: false,
       message: e.message,
     };
-  }
-}
-
-export async function save(ctx) {
-  try {
-    const newProduct = ctx.request.body;
-    addProduct(newProduct);
-    ctx.status = 201;
-    return (ctx.body = {
-      success: true,
-    });
-  } catch (e) {
-    return (ctx.body = {
-      success: false,
-      message: e.message,
-    });
   }
 }
 
