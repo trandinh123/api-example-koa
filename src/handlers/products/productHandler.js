@@ -1,14 +1,9 @@
-const _ = require("lodash");
-const render = require("koa-ejs");
 import {
   getAll as getAllProducts,
   getOne as getOneProduct,
   add as addProduct,
   remove as removeProduct,
   update as updateProduct,
-  getSome as getSomeProducts,
-  sort as sortProducts,
-  getFields as getProductFields,
 } from "../../database/productReposity";
 
 export async function save(ctx) {
@@ -29,22 +24,12 @@ export async function save(ctx) {
 
 export async function getProducts(ctx) {
   try {
-    const { limit, sortBy } = ctx.request.query;
-    let products = [];
+    const { sortBy, limit } = ctx.request.query;
+    const products = getAllProducts(sortBy, limit);
 
-    if (sortBy) {
-      products = sortProducts(sortBy);
-    } else {
-      products = getAllProducts();
-    }
-
-    if (limit) {
-      products = getSomeProducts(products, limit);
-    }
-
-    ctx.body = {
+    return (ctx.body = {
       data: products,
-    };
+    });
   } catch (e) {
     ctx.status = 404;
     ctx.body = {
@@ -58,16 +43,10 @@ export async function getProducts(ctx) {
 export async function getProduct(ctx) {
   try {
     const { id } = ctx.params;
-    let getCurrentProduct = getOneProduct(id);
     const { fields } = ctx.request.query;
+    let getCurrentProduct = getOneProduct(id, fields);
 
     if (getCurrentProduct) {
-      if (fields) {
-        getCurrentProduct = getProductFields(
-          getCurrentProduct,
-          fields.split(",")
-        );
-      }
       return (ctx.body = {
         data: getCurrentProduct,
       });

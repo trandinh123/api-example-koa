@@ -2,12 +2,31 @@ const { data: products } = require("./products");
 import { writeFileSync } from "fs";
 const _ = require("lodash");
 
-export function getAll() {
-  return products;
+export function getAll(sortBy, limit) {
+  let data = products;
+
+  if (sortBy) {
+    data = data.sort((a, b) => {
+      if (sortBy === "asc") {
+        return a.createdAt - b.createdAt;
+      }
+      return b.createdAt - a.createdAt;
+    });
+  }
+
+  if (limit) {
+    data = data.slice(0, limit);
+  }
+
+  return data;
 }
 
-export function getOne(id) {
-  return products.find((product) => parseInt(id) === product.id);
+export function getOne(id, fields) {
+  let product = products.find((product) => parseInt(id) === product.id);
+  if (fields) {
+    return _.pick(product, fields.split(","));
+  }
+  return product;
 }
 
 export function add(data) {
@@ -47,21 +66,4 @@ export function remove(id) {
       data: updateProducts,
     })
   );
-}
-
-export function getSome(products, limit) {
-  return products.slice(0, limit);
-}
-
-export function sort(sortBy) {
-  return products.sort((a, b) => {
-    if (sortBy === "asc") {
-      return a.createdAt - b.createdAt;
-    }
-    return b.createdAt - a.createdAt;
-  });
-}
-
-export function getFields(product, fields) {
-  return _.pick(product, fields);
 }
